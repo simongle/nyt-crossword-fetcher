@@ -4,7 +4,13 @@ This will fetch the newspaper version of the crossword when provided with a date
 ## Setup
 1. Log into NYT, in same browser visit the direct URL of a crossword PDF like https://www.nytimes.com/svc/crosswords/v2/puzzle/print/Jun0824.pdf
 2. Open the network tab, refresh the page, copy request headers for PDF
-3. Paste the string value of CookieString as the value of rawCookieString below
+3. Create .env file and add the following values:
+
+```sh
+NYT_COOKIE_STRING=""
+NYT_BASE_URL=https://www.nytimes.com/svc/crosswords/v2/puzzle/print/
+NYT_CROSSWORD_DATE=Jun0624
+```
 
 ```bash
 go build 
@@ -17,5 +23,8 @@ go run .
 ```
 
 ## TODOs
-* Create github
+* Create github repo
+* Deploy lambda (maybe)
 * Add integration to write to an s3 bucket or other cloud storage, currently stores them in a local directory. 
+* Refactor to automatically construct date based on time.Now()
+* Update test to use mocked HTTP request

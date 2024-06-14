@@ -1,0 +1,12 @@
+# secrets
+.env
+
+# actual pdfs
+fetched/*
+
+# compiled program binary
+crossword_fetcher
+
+# cruft
+.DS_Store
+*.swp
