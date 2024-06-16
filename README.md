@@ -23,7 +23,6 @@ go run .
 ```
 
 ## TODOs
-* Create github repo
 * Deploy lambda (maybe)
 * Add integration to write to an s3 bucket or other cloud storage, currently stores them in a local directory. 
 * Refactor to automatically construct date based on time.Now()

@@ -71,11 +71,13 @@ func CrosswordFetcher(event *CrossWordFetchEvent) []byte {
 	status := resp.Status
 	log.Print(status)
 
-	err = os.WriteFile("fetched/"+event.crosswordDate+".pdf", b, 0666)
+	// err = os.WriteFile("fetched/"+event.crosswordDate+".pdf", b, 0666)
 
 	if err != nil {
 		log.Fatal(err)
 	}
+	formattedDate := format_time()
+	fmt.Println(formattedDate)
 
 	// Return a slice of first 20 bytes of file to use for testing
 	head := b[:20]
