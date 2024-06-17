@@ -9,13 +9,14 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/joho/godotenv"
 	"golang.org/x/net/publicsuffix"
 )
 
 type CrossWordFetchEvent struct {
-	baseUrl         string `json:"base_url"`
+	baseUrl         string
 	crosswordDate   string
 	nytCookieString string
 }
@@ -59,7 +60,16 @@ func CrosswordFetcher(event *CrossWordFetchEvent) []byte {
 
 	c.Jar.SetCookies(urlObj, parsedCookies)
 
-	resp, err := c.Get(event.baseUrl + event.crosswordDate + ".pdf")
+	var d string
+	if event.crosswordDate != "" {
+		d = event.crosswordDate
+	} else {
+		d = formatTime(time.Now())
+	}
+	fmt.Println("fetching puzzle from: ", d)
+
+	// Fetch puzzle
+	resp, err := c.Get(event.baseUrl + d + ".pdf")
 
 	if err != nil {
 		log.Fatal(err)
@@ -71,7 +81,8 @@ func CrosswordFetcher(event *CrossWordFetchEvent) []byte {
 	status := resp.Status
 	log.Print(status)
 
-	err = os.WriteFile("fetched/"+event.crosswordDate+".pdf", b, 0666)
+	// TODO change to suit location on your machine
+	err = os.WriteFile("/Users/Simon/Development/golearn/crossword/fetched/"+d+".pdf", b, 0666)
 
 	if err != nil {
 		log.Fatal(err)
@@ -85,7 +96,8 @@ func CrosswordFetcher(event *CrossWordFetchEvent) []byte {
 func main() {
 
 	// Load environment variables from .env file
-	err := godotenv.Load()
+	// TODO change to suit location on your machine
+	err := godotenv.Load("/Users/Simon/Development/golearn/crossword/.env")
 
 	if err != nil {
 		log.Fatal("Error loading .env file:", err)
@@ -106,7 +118,7 @@ func main() {
 	crosswordDate, ok := os.LookupEnv("NYT_CROSSWORD_DATE")
 
 	if !ok {
-		log.Fatal("missing NYT_CROSSWORD_DATE")
+		fmt.Println("No date provided, fetching todays puzzle")
 	}
 
 	invokeData := CrossWordFetchEvent{
