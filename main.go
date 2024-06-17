@@ -16,7 +16,7 @@ import (
 )
 
 type CrossWordFetchEvent struct {
-	baseUrl         string `json:"base_url"`
+	baseUrl         string
 	crosswordDate   string
 	nytCookieString string
 }
@@ -81,7 +81,8 @@ func CrosswordFetcher(event *CrossWordFetchEvent) []byte {
 	status := resp.Status
 	log.Print(status)
 
-	err = os.WriteFile("fetched/"+d+".pdf", b, 0666)
+	// TODO change to suit location on your machine
+	err = os.WriteFile("/Users/Simon/Development/golearn/crossword/fetched/"+d+".pdf", b, 0666)
 
 	if err != nil {
 		log.Fatal(err)
@@ -95,7 +96,8 @@ func CrosswordFetcher(event *CrossWordFetchEvent) []byte {
 func main() {
 
 	// Load environment variables from .env file
-	err := godotenv.Load()
+	// TODO change to suit location on your machine
+	err := godotenv.Load("/Users/Simon/Development/golearn/crossword/.env")
 
 	if err != nil {
 		log.Fatal("Error loading .env file:", err)
