@@ -6,9 +6,21 @@ import (
 	"os"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/joho/godotenv"
 )
+
+func TestFormatTime(t *testing.T) {
+	want := "Jun0624"
+
+	mockTime, _ := time.Parse("2006-01-02", "2024-06-06")
+	got := formatTime(mockTime)
+
+	if got != want {
+		t.Errorf("got %q want %q", got, want)
+	}
+}
 
 func TestCrosswordFetcher(t *testing.T) {
 

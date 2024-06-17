@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/joho/godotenv"
 	"golang.org/x/net/publicsuffix"
@@ -59,7 +60,16 @@ func CrosswordFetcher(event *CrossWordFetchEvent) []byte {
 
 	c.Jar.SetCookies(urlObj, parsedCookies)
 
-	resp, err := c.Get(event.baseUrl + event.crosswordDate + ".pdf")
+	var d string
+	if event.crosswordDate != "" {
+		d = event.crosswordDate
+	} else {
+		d = formatTime(time.Now())
+	}
+	fmt.Println("fetching puzzle from: ", d)
+
+	// Fetch puzzle
+	resp, err := c.Get(event.baseUrl + d + ".pdf")
 
 	if err != nil {
 		log.Fatal(err)
@@ -71,13 +81,11 @@ func CrosswordFetcher(event *CrossWordFetchEvent) []byte {
 	status := resp.Status
 	log.Print(status)
 
-	// err = os.WriteFile("fetched/"+event.crosswordDate+".pdf", b, 0666)
+	err = os.WriteFile("fetched/"+d+".pdf", b, 0666)
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	formattedDate := format_time()
-	fmt.Println(formattedDate)
 
 	// Return a slice of first 20 bytes of file to use for testing
 	head := b[:20]
@@ -108,7 +116,7 @@ func main() {
 	crosswordDate, ok := os.LookupEnv("NYT_CROSSWORD_DATE")
 
 	if !ok {
-		log.Fatal("missing NYT_CROSSWORD_DATE")
+		fmt.Println("No date provided, fetching todays puzzle")
 	}
 
 	invokeData := CrossWordFetchEvent{

@@ -5,15 +5,17 @@ import (
 	"time"
 )
 
-func format_time() string {
-	currentTime := time.Now()
-	formattedYear := fmt.Sprintf("%d", currentTime.Year())
-	month := currentTime.Month()
-	formattedMonth := fmt.Sprintf("%02d", month)
-	day := currentTime.Day()
+func formatTime(t time.Time) string {
+
+	// Convert 4 digit year to 2
+	formattedYear := fmt.Sprintf("%d", t.Year())[2:]
+
+	month := t.Month().String()[0:3]
+
+	day := t.Day()
+
+	// Zero prefix single digit day
 	formattedDay := fmt.Sprintf("%02d", day)
 
-	// formatted := fmt.Sprintf("%s%s%s", month, day, formattedYear)
-
-	return formattedMonth + formattedDay + formattedYear
+	return month + formattedDay + formattedYear
 }
